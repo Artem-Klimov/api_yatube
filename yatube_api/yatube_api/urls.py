@@ -10,8 +10,8 @@ from djoser.views import TokenCreateView, UserViewSet
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('api.urls')),
-    path('api/v1/api-token-auth/', TokenCreateView.as_view(), name='token_create'),
-    path('api/v1/users/', UserViewSet.as_view({'post': 'create'}), name='user_create'),
+    # path('api/v1/api-token-auth/', TokenCreateView.as_view(), name='token_create'),
+    # path('api/v1/users/', UserViewSet.as_view({'post': 'create'}), name='user_create'),
 ]
 
 

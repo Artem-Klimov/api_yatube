@@ -25,9 +25,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'posts.apps.PostsConfig',
-    'api.apps.ApiConfig',
     'rest_framework',
-    'djoser',
+    'rest_framework.authtoken',
+    'api.apps.ApiConfig',
 ]
 
 DJOSER = {
@@ -71,8 +71,8 @@ REST_FRAMEWORK = {
     ],
 
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ],
+        'rest_framework.authentication.TokenAuthentication',
+    ]
 }
 
 SIMPLE_JWT = {
