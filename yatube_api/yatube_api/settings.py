@@ -30,6 +30,11 @@ INSTALLED_APPS = [
     'djoser',
 ]
 
+DJOSER = {
+    'SEND_ACTIVATION_EMAIL': False,  # Отключение отправки письма для активации аккаунта
+    'SEND_CONFIRMATION_EMAIL': False,  # Отключение отправки письма для подтверждения аккаунта
+}
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
