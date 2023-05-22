@@ -1,26 +1,11 @@
 from django.shortcuts import get_object_or_404
-from djoser.serializers import UserCreateSerializer
-from djoser.views import TokenCreateView
 from posts.models import Group, Post, User
-from rest_framework import status, viewsets
+from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from rest_framework.views import APIView
 
 from .permissions import IsAuthorOrReadOnly
 from .serializers import (CommentSerializer, GroupSerializer, PostSerializer,
                           UserSerializer)
-
-
-class UserRegistrationView(APIView):
-    def post(self, request, format=None):
-        serializer = UserCreateSerializer(data=request.data)
-        if serializer.is_valid():
-            user = serializer.save()
-            token_data = TokenCreateView().create(request=request).data
-            token_data['user'] = user.id
-            return Response(token_data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class GroupViewSet(viewsets.ReadOnlyModelViewSet):
