@@ -7,6 +7,24 @@ from posts.models import Group, Post, User
 from .access import IsAuthorOrReadOnly
 from .serializers import (CommentSerializer, GroupSerializer, PostSerializer, UserSerializer)
 
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from django.contrib.auth import get_user_model
+from djoser.serializers import UserCreateSerializer
+from djoser.views import TokenCreateView
+
+
+class UserRegistrationView(APIView):
+    def post(self, request, format=None):
+        serializer = UserCreateSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            token_data = TokenCreateView().create(request=request).data
+            token_data['user'] = user.id
+            return Response(token_data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class GroupViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Group.objects.all()
@@ -16,7 +34,8 @@ class GroupViewSet(viewsets.ReadOnlyModelViewSet):
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-
+    permission_classes = [IsAuthorOrReadOnly]
+    
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
 
