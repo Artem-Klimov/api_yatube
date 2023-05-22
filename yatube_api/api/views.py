@@ -1,18 +1,15 @@
 from django.shortcuts import get_object_or_404
-from rest_framework import pagination, permissions, viewsets, mixins
-from rest_framework.filters import SearchFilter
-from rest_framework.permissions import IsAuthenticated
-
-from posts.models import Group, Post, User
-from .access import IsAuthorOrReadOnly
-from .serializers import (CommentSerializer, GroupSerializer, PostSerializer, UserSerializer)
-
-from rest_framework import status
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from django.contrib.auth import get_user_model
 from djoser.serializers import UserCreateSerializer
 from djoser.views import TokenCreateView
+from posts.models import Group, Post, User
+from rest_framework import status, viewsets
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from .permissions import IsAuthorOrReadOnly
+from .serializers import (CommentSerializer, GroupSerializer, PostSerializer,
+                          UserSerializer)
 
 
 class UserRegistrationView(APIView):
@@ -34,8 +31,8 @@ class GroupViewSet(viewsets.ReadOnlyModelViewSet):
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-    permission_classes = [IsAuthorOrReadOnly]
-    
+    permission_classes = [IsAuthenticated, IsAuthorOrReadOnly]
+
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
 

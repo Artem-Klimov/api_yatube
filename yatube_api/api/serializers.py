@@ -1,7 +1,7 @@
+from django.contrib.auth import get_user_model
 from posts.models import Comment, Group, Post, User
 from rest_framework import serializers
 from rest_framework.relations import SlugRelatedField
-from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
@@ -24,7 +24,7 @@ class CommentSerializer(serializers.ModelSerializer):
     author = serializers.SlugRelatedField(
         read_only=True, slug_field='username'
     )
-    post = serializers.SlugRelatedField(read_only=True, slug_field='TextPost')
+    post = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = Comment
@@ -38,5 +38,4 @@ class UserSerializer(serializers.ModelSerializer):
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
-        user = User.objects.create_user(**validated_data)
-        return user
+        return User.objects.create_user(**validated_data)
